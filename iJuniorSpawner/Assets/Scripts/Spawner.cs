@@ -23,26 +23,20 @@ public class Spawner : MonoBehaviour
             _spawnPoints[i] = spawnPoint;
         }
     }
-
-    // Start is called before the first frame update
-    void Start()
+    
+    private void Start()
     {
-        int delayTime = 0;
-        Vector3 position = Vector3.zero;
-        
-        for (int i = 0; i < _childCount; i++)
-        {
-            delayTime += _spawnDelayInSecond;
-            position = _spawnPoints[i].Position;
-
-            StartCoroutine(SpawnEnemy(delayTime, position));
-        }
-        
+        StartCoroutine(SpawnEnemy(_spawnDelayInSecond, _spawnPoints, _enemy));
     }
 
-    private IEnumerator SpawnEnemy(int delaySecond, Vector3 position)
+    private IEnumerator SpawnEnemy(int delaySecond, SpawnPoint[] spawnPoints, Enemy enemy)
     {
-        yield return new WaitForSeconds(delaySecond);
-        _enemy.Spawn(position);   
+        int count = spawnPoints.Length;
+
+        for (int i = 0; i < count; i++)
+        {
+            yield return new WaitForSeconds(delaySecond);
+            Instantiate(enemy, spawnPoints[i].Position, Quaternion.identity);
+        }
     }
 }
